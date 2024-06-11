@@ -1,0 +1,80 @@
+class NeuralNetwork:
+    def __init__(self, input_size, hidden_size, output_size):
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.output_size = output_size
+        
+        # Initialize weights and biases
+        self.weights_input_hidden = np.random.rand(self.input_size, self.hidden_size)
+        self.bias_hidden = np.random.rand(1, self.hidden_size)
+        
+        self.weights_hidden_output = np.random.rand(self.hidden_size, self.output_size)
+        self.bias_output = np.random.rand(1, self.output_size)
+        
+    def sigmoid(self, x):
+        return 1 / (1 + np.exp(-x))
+    
+    def sigmoid_derivative(self, x):
+        return x * (1 - x)
+    
+    def feedforward(self, inputs):
+        # Forward pass
+        hidden_input = np.dot(inputs, self.weights_input_hidden) + self.bias_hidden
+        hidden_output = self.sigmoid(hidden_input)
+        
+        output = np.dot(hidden_output, self.weights_hidden_output) + self.bias_output
+        output = self.sigmoid(output)
+        
+        return output
+    
+    def train(self, inputs, targets, epochs, learning_rate):
+        for epoch in range(epochs):
+            # Forward pass
+            hidden_input = np.dot(inputs, self.weights_input_hidden) + self.bias_hidden
+            hidden_output = self.sigmoid(hidden_input)
+        
+            output = np.dot(hidden_output, self.weights_hidden_output) + self.bias_output
+            output = self.sigmoid(output)
+            
+            # Backpropagation
+            # Calculate error
+            output_error = targets - output
+            
+            # Adjust output layer weights and biases
+            output_delta = output_error * self.sigmoid_derivative(output)
+            self.weights_hidden_output += np.dot(hidden_output.T, output_delta) * learning_rate
+            self.bias_output += np.sum(output_delta, axis=0, keepdims=True) * learning_rate
+            
+            # Calculate hidden layer error
+            hidden_error = np.dot(output_delta, self.weights_hidden_output.T)
+            
+            # Adjust hidden layer weights and biases
+            hidden_delta = hidden_error * self.sigmoid_derivative(hidden_output)
+            self.weights_input_hidden += np.dot(inputs.T, hidden_delta) * learning_rate
+            self.bias_hidden += np.sum(hidden_delta, axis=0, keepdims=True) * learning_rate
+            
+            if epoch % 1000 == 0:
+                print("Epoch:", epoch, "Error:", np.mean(np.abs(output_error)))
+
+# Example usage
+if __name__ == "__main__":
+    # Define dataset
+    inputs = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+    targets = np.array([[0], [1], [1], [0]])
+    
+    # Define network architecture
+    input_size = 2
+    hidden_size = 4
+    output_size = 1
+    
+    # Create neural network
+    nn = NeuralNetwork(input_size, hidden_size, output_size)
+    
+    # Train the network
+    nn.train(inputs, targets, epochs=10000, learning_rate=0.1)
+    
+    # Test the network
+    print("Predictions after training:")
+    for i in range(len(inputs)):
+        print("Input:", inputs[i], "Target:", targets[i], "Prediction:", nn.feedforward(inputs[i]))
+
