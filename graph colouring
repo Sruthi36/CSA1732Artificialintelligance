@@ -1,0 +1,94 @@
+def is_valid(coloring, node, color, graph):
+    for neighbor in graph[node]:
+        if neighbor in coloring and coloring[neighbor] == color:
+            return False
+    return True
+
+def backtrack(graph, colors, coloring, node):
+    if len(coloring) == len(graph):
+        return coloring
+
+    for color in colors:
+        if is_valid(coloring, node, color, graph):
+            coloring[node] = color
+            result = backtrack(graph, colors, coloring, next_node(graph, coloring))
+            if result:
+                return result
+            del coloring[node]
+
+    return None
+
+def next_node(graph, coloring):
+    for node in graph:
+        if node not in coloring:
+            return node
+    return None
+
+def map_coloring(graph, colors):
+    coloring = {}
+    start_node = next_node(graph, coloring)
+    return backtrack(graph, colors, coloring, start_node)
+
+# Example usage
+if __name__ == "__main__":
+    # Example graph (map) represented as an adjacency list
+    graph = {
+        'WA': ['OR', 'ID'],
+        'OR': ['WA', 'ID', 'CA', 'NV'],
+        'CA': ['OR', 'NV', 'AZ'],
+        'NV': ['OR', 'CA', 'ID', 'UT', 'AZ'],
+        'ID': ['WA', 'OR', 'NV', 'UT', 'MT', 'WY'],
+        'UT': ['ID', 'NV', 'AZ', 'CO', 'WY'],
+        'AZ': ['CA', 'NV', 'UT', 'NM'],
+        'MT': ['ID', 'WY', 'ND', 'SD'],
+        'WY': ['MT', 'ID', 'UT', 'CO', 'SD', 'NE'],
+        'CO': ['WY', 'UT', 'NM', 'NE', 'KS', 'OK'],
+        'NM': ['AZ', 'UT', 'CO', 'TX', 'OK'],
+        'ND': ['MT', 'SD', 'MN'],
+        'SD': ['ND', 'MT', 'WY', 'NE', 'IA', 'MN'],
+        'NE': ['SD', 'WY', 'CO', 'KS', 'MO', 'IA'],
+        'KS': ['NE', 'CO', 'OK', 'MO'],
+        'OK': ['KS', 'CO', 'NM', 'TX', 'AR', 'MO'],
+        'TX': ['NM', 'OK', 'AR', 'LA'],
+        'MN': ['ND', 'SD', 'IA', 'WI'],
+        'IA': ['MN', 'SD', 'NE', 'MO', 'WI', 'IL'],
+        'MO': ['IA', 'NE', 'KS', 'OK', 'AR', 'TN', 'KY', 'IL'],
+        'AR': ['MO', 'OK', 'TX', 'LA', 'MS', 'TN'],
+        'LA': ['TX', 'AR', 'MS'],
+        'WI': ['MN', 'IA', 'IL'],
+        'IL': ['WI', 'IA', 'MO', 'KY', 'IN'],
+        'KY': ['IL', 'MO', 'TN', 'VA', 'WV', 'OH', 'IN'],
+        'TN': ['KY', 'MO', 'AR', 'MS', 'AL', 'GA', 'NC', 'VA'],
+        'MS': ['LA', 'AR', 'TN', 'AL'],
+        'AL': ['MS', 'TN', 'GA', 'FL'],
+        'GA': ['TN', 'AL', 'FL', 'SC', 'NC'],
+        'FL': ['AL', 'GA'],
+        'NC': ['GA', 'SC', 'TN', 'VA'],
+        'SC': ['GA', 'NC'],
+        'VA': ['NC', 'TN', 'KY', 'WV', 'MD'],
+        'WV': ['OH', 'KY', 'VA', 'PA', 'MD'],
+        'OH': ['IN', 'KY', 'WV', 'PA', 'MI'],
+        'IN': ['IL', 'KY', 'OH', 'MI'],
+        'MI': ['OH', 'IN'],
+        'PA': ['OH', 'WV', 'MD', 'DE', 'NJ', 'NY'],
+        'MD': ['VA', 'WV', 'PA', 'DE'],
+        'DE': ['MD', 'PA', 'NJ'],
+        'NJ': ['PA', 'DE', 'NY'],
+        'NY': ['PA', 'NJ', 'CT', 'MA', 'VT'],
+        'CT': ['NY', 'MA', 'RI'],
+        'RI': ['CT', 'MA'],
+        'MA': ['NY', 'CT', 'RI', 'NH', 'VT'],
+        'NH': ['MA', 'VT', 'ME'],
+        'VT': ['NY', 'MA', 'NH'],
+        'ME': ['NH']
+    }
+
+    colors = ['Red', 'Green', 'Blue', 'Yellow']
+    
+    coloring = map_coloring(graph, colors)
+    if coloring:
+        print("Coloring of the map:")
+        for state in coloring:
+            print(f"{state}: {coloring[state]}")
+    else:
+        print("No valid coloring found.")
