@@ -1,0 +1,54 @@
+import random
+
+class VacuumCleanerAgent:
+    def __init__(self, environment):
+        self.environment = environment
+        self.position = (0, 0)  # Starting at the top-left corner
+        self.cleaned = 0
+
+    def perceive(self):
+        # Perceive the current state of the environment at the agent's position
+        return self.environment[self.position[0]][self.position[1]]
+
+    def act(self):
+        # Perform the cleaning action if there's dirt
+        if self.perceive() == 1:
+            self.environment[self.position[0]][self.position[1]] = 0
+            self.cleaned += 1
+            print(f"Cleaned position {self.position}")
+        else:
+            print(f"Position {self.position} is already clean")
+
+        # Move to the next position (simple strategy: move right, then down)
+        if self.position[1] < len(self.environment[0]) - 1:
+            self.position = (self.position[0], self.position[1] + 1)
+        elif self.position[0] < len(self.environment) - 1:
+            self.position = (self.position[0] + 1, 0)
+
+    def run(self):
+        # Run the agent until all cells are cleaned or the agent has visited all cells
+        for _ in range(len(self.environment) * len(self.environment[0])):
+            self.act()
+
+# Initialize the environment
+def create_environment(rows, cols, dirt_probability=0.2):
+    return [[1 if random.random() < dirt_probability else 0 for _ in range(cols)] for _ in range(rows)]
+
+def print_environment(environment):
+    for row in environment:
+        print(" ".join(str(cell) for cell in row))
+
+# Example usage
+if __name__ == "__main__":
+    rows, cols = 5, 5  # 5x5 grid
+    environment = create_environment(rows, cols)
+    print("Initial environment:")
+    print_environment(environment)
+
+    agent = VacuumCleanerAgent(environment)
+    agent.run()
+
+    print("Environment after cleaning:")
+    print_environment(environment)
+    print(f"Total cells cleaned: {agent.cleaned}")
+
