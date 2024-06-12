@@ -1,0 +1,7 @@
+dob(john, date(1990, 5, 14)).
+dob(mary, date(1985, 7, 23)).
+dob(susan, date(1992, 11, 30)).
+dob(tom, date(1980, 1, 10)).
+dob(alice, date(1995, 6, 19)).
+find_dob(Name, Year, Month, Day) :-
+    dob(Name, date(Year, Month, Day)).
