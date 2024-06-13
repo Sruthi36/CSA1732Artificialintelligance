@@ -1,0 +1,30 @@
+% Facts
+fact(weather_is_good).
+fact(have_money).
+fact(car_is_working).
+
+% Rules
+rule(go_for_a_trip) :-
+    fact(weather_is_good),
+    fact(have_money),
+    fact(car_is_working).
+
+rule(go_shopping) :-
+    fact(have_money),
+    fact(weather_is_good).
+
+rule(stay_home) :-
+    \+ fact(weather_is_good).
+
+% Backward chaining engine
+backward_chaining(Goal) :-
+    rule(Goal).
+
+% Query to trigger backward chaining
+query(Goal) :-
+    backward_chaining(Goal).
+
+% Example Queries:
+% ?- query(go_for_a_trip).
+% ?- query(go_shopping).
+% ?- query(stay_home).
