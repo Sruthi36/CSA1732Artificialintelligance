@@ -1,0 +1,58 @@
+% Facts: parent(child, parent)
+parent(john, mary).
+parent(john, paul).
+parent(mary, susan).
+parent(mary, george).
+parent(paul, lisa).
+parent(paul, david).
+
+% Gender facts
+male(john).
+male(paul).
+male(george).
+male(david).
+
+female(mary).
+female(susan).
+female(lisa).
+
+% Rules to determine family relationships
+
+% Child relationship
+child(X, Y) :- parent(Y, X).
+
+% Grandparent relationship
+grandparent(X, Y) :- parent(X, Z), parent(Z, Y).
+
+% Grandchild relationship
+grandchild(X, Y) :- grandparent(Y, X).
+
+% Sibling relationship
+sibling(X, Y) :- parent(Z, X), parent(Z, Y), X \= Y.
+
+% Cousin relationship
+cousin(X, Y) :- parent(A, X), parent(B, Y), sibling(A, B).
+
+% Ancestor relationship (recursive)
+ancestor(X, Y) :- parent(X, Y).
+ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+
+% Descendant relationship (recursive)
+descendant(X, Y) :- child(X, Y).
+descendant(X, Y) :- child(X, Z), descendant(Z, Y).
+
+% Aunt/Uncle relationship
+aunt_or_uncle(X, Y) :- sibling(X, Z), parent(Z, Y).
+
+% Niece/Nephew relationship
+niece_or_nephew(X, Y) :- aunt_or_uncle(Y, X).
+
+% Example Queries:
+% ?- parent(john, mary).
+% ?- grandparent(mary, susan).chilfd
+% ?- sibling(john, paul).
+% ?- cousin(susan, david).
+% ?- ancestor(john, lisa).
+% ?- descendant(lisa, john).
+% ?- aunt_or_uncle(mary, david).
+% ?- niece_or_nephew(lisa, john).
