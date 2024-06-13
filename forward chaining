@@ -1,0 +1,38 @@
+% Facts
+%
+fact(weather_is_good).
+fact(have_money).
+fact(car_is_working).
+
+% Rules
+rule(go_for_a_trip) :-
+    fact(weather_is_good),
+    fact(have_money),
+    fact(car_is_working).
+
+rule(go_shopping) :-
+    fact(have_money),
+    fact(weather_is_good).
+
+rule(stay_home) :-
+    \+ fact(weather_is_good).
+
+% Forward chaining engine
+forward_chaining(Goal) :-
+    rule(Goal),
+    assert_fact(Goal).
+
+% Assert fact dynamically
+assert_fact(Fact) :-
+    \+ fact(Fact),
+    assertz(fact(Fact)).
+
+% Query to trigger forward chaining
+query(Goal) :-
+    forward_chaining(Goal),
+    fact(Goal).
+
+% Example Queries:
+% ?- query(go_for_a_trip).
+% ?- query(go_shopping).
+% ?- query(stay_home).
