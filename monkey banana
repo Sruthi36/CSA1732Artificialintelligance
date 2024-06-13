@@ -1,0 +1,42 @@
+% Initial state: monkey at door, on the floor, box at window, monkey not holding banana
+initial_state(state(at_door, on_floor, at_window, not_holding)).
+
+% Final state: monkey at middle, on box, holding banana
+final_state(state(at_middle, on_box, at_middle, holding)).
+
+% Move actions
+move(state(at_door, on_floor, Box, Has),
+     go_to_door,
+     state(at_door, on_floor, Box, Has)).
+
+move(state(at_window, on_floor, Box, Has),
+     go_to_window,
+     state(at_window, on_floor, Box, Has)).
+
+move(state(at_middle, on_floor, Box, Has),
+     go_to_middle,
+     state(at_middle, on_floor, Box, Has)).
+
+move(state(Place, on_floor, Place, Has),
+     push_box_to_middle,
+     state(at_middle, on_floor, at_middle, Has)).
+
+move(state(Place, on_floor, Place, Has),
+     climb_box,
+     state(Place, on_box, Place, Has)).
+
+move(state(at_middle, on_box, at_middle, not_holding),
+     grasp_banana,
+     state(at_middle, on_box, at_middle, holding)).
+
+% Solve the problem
+solve_problem(State, Moves) :-
+    final_state(State),
+    Moves = [].
+
+solve_problem(State, [Move | Moves]) :-
+    move(State, Move, NextState),
+    solve_problem(NextState, Moves).
+
+% Example query to solve the problem
+% ?- initial_state(InitialState), solve_problem(InitialState, Moves).
