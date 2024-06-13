@@ -1,0 +1,41 @@
+% Facts: Symptoms associated with diseases
+symptom(flu, fever).
+symptom(flu, headache).
+symptom(flu, cough).
+symptom(flu, sore_throat).
+symptom(cold, cough).
+symptom(cold, sneezing).
+symptom(cold, runny_nose).
+symptom(cold, sore_throat).
+symptom(allergy, sneezing).
+symptom(allergy, runny_nose).
+symptom(allergy, itchy_eyes).
+symptom(allergy, headache).
+symptom(covid19, fever).
+symptom(covid19, cough).
+symptom(covid19, shortness_of_breath).
+symptom(covid19, loss_of_taste).
+symptom(covid19, loss_of_smell).
+symptom(covid19, fatigue).
+symptom(migraine, headache).
+symptom(migraine, nausea).
+symptom(migraine, sensitivity_to_light).
+symptom(strep_throat, sore_throat).
+symptom(strep_throat, fever).
+symptom(strep_throat, swollen_lymph_nodes).
+
+% Rule to diagnose disease based on symptoms
+diagnose(Disease, Symptoms) :-
+    symptom(Disease, _), % Ensure the disease exists
+    subset(Symptoms, [Symptom || symptom(Disease, Symptom)]).
+
+% Helper predicate to check if all elements of the first list are in the second list
+subset([], _).
+subset([H|T], List) :-
+    member(H, List),
+    subset(T, List).
+
+% Example Queries:
+% ?- diagnose(Disease, [fever, cough]).
+% ?- diagnose(Disease, [headache, nausea]).
+% ?- diagnose(Disease, [sore_throat, fever, swollen_lymph_nodes]).
