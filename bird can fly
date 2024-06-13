@@ -1,0 +1,22 @@
+% Knowledge base of birds and their flying abilities
+bird(eagle).
+bird(penguin).
+bird(sparrow).
+bird(ostrich).
+bird(albatross).
+bird(kiwi).
+
+% Facts about birds that cannot fly
+cannot_fly(penguin).
+cannot_fly(ostrich).
+cannot_fly(kiwi).
+
+% Rule to determine if a bird can fly
+can_fly(Bird) :-
+    bird(Bird),
+    \+ cannot_fly(Bird).
+
+% Rule to determine if a bird cannot fly
+can_not_fly(Bird) :-
+    bird(Bird),
+    cannot_fly(Bird).
