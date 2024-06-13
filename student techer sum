@@ -1,0 +1,15 @@
+enrolled(john, cs303).
+enrolled(mary, eng202).
+enrolled(alex, cs303).
+enrolled(sara, hist404).
+
+% Rule to print student-teacher-subject details
+print_student_teacher_subject :-
+    enrolled(Student, Subject),
+    teaches(Teacher, Subject),
+    format('Student: ~w, Teacher: ~w, Subject Code: ~w~n', [Student, Teacher, Subject]),
+    fail. % Force backtracking to print all results
+print_student_teacher_subject. % To stop after all results are printed
+
+% Entry point
+:- print_student_teacher_subject.
