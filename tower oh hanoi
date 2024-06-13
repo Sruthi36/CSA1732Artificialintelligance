@@ -1,0 +1,18 @@
+% Define the main predicate to solve the Towers of Hanoi problem
+hanoi(N) :-
+    move(N, left, center, right).
+
+% Base case: Moving 0 disks does nothing
+move(0, _, _, _) :- !.
+
+% Recursive case: Moving N disks
+move(N, A, B, C) :-
+    N > 0,
+    M is N - 1,
+    move(M, A, C, B),          % Move M disks from A to C using B as auxiliary
+    write('Move disk from '),  % Move the Nth disk from A to B
+    write(A),
+    write(' to '),
+    write(B),
+    nl,
+    move(M, C, B, A).          % Move the M disks from C to B using A as auxiliary
