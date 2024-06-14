@@ -1,0 +1,38 @@
+% Facts about planets
+% planet(Name, OrderFromSun, Diameter_km, Mass_kg, Moons, OrbitPeriod_days).
+
+planet(mercury, 1, 4879, 3.3011e23, 0, 88).
+planet(venus, 2, 12104, 4.8675e24, 0, 225).
+planet(earth, 3, 12742, 5.97237e24, 1, 365.25).
+planet(mars, 4, 6779, 6.4171e23, 2, 687).
+planet(jupiter, 5, 139820, 1.8982e27, 79, 4333).
+planet(saturn, 6, 116460, 5.6834e26, 82, 10759).
+planet(uranus, 7, 50724, 8.6810e25, 27, 30687).
+planet(neptune, 8, 49244, 1.02413e26, 14, 60190).
+
+% Rule to find planets by their order from the sun
+planet_by_order(Order, Name) :-
+    planet(Name, Order, _, _, _, _).
+
+% Rule to find planets larger than a certain diameter
+planet_larger_than(Diameter, Name) :-
+    planet(Name, _, D, _, _, _),
+    D > Diameter.
+
+% Rule to find planets with more than a certain number of moons
+planet_with_more_moons_than(NumMoons, Name) :-
+    planet(Name, _, _, _, Moons, _),
+    Moons > NumMoons.
+
+% Rule to find the orbital period of a planet
+orbit_period(Name, Period) :-
+    planet(Name, _, _, _, _, Period).
+
+% Rule to find the mass of a planet
+planet_mass(Name, Mass) :-
+    planet(Name, _, _, Mass, _, _).
+
+% Rule to check if a planet has moons
+has_moons(Name) :-
+    planet(Name, _, _, _, Moons, _),
+    Moons > 0.
